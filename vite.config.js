@@ -5,4 +5,7 @@ export default defineConfig({
     port: 18807,
     strictPort: true,
   },
+  optimizeDeps: {
+    exclude: ["@firecrawl/anydoc-wasm"],
+  },
 });

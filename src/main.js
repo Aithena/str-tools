@@ -1,11 +1,17 @@
 import "./style.css";
 import { mountJsonFormat } from "./tools/json-format.js";
+import { mountDocToMd } from "./tools/doc-to-md.js";
 
 const tools = [
   {
     id: "json-format",
     name: "JSON 格式化",
     mount: mountJsonFormat,
+  },
+  {
+    id: "doc-to-md",
+    name: "文档转 MD",
+    mount: mountDocToMd,
   },
 ];
 

@@ -284,6 +284,81 @@ select {
   background: transparent;
 }
 
+.btn:disabled,
+.drop-zone:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.drop-wrap {
+  flex: 1;
+  min-height: 0;
+  padding: 12px 14px 0;
+}
+
+.drop-zone {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px dashed var(--line);
+  border-radius: 8px;
+  background: #fff;
+  color: inherit;
+  cursor: pointer;
+  text-align: center;
+  padding: 24px;
+}
+
+.drop-zone:hover:not(:disabled),
+.drop-zone.over {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.drop-title {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.drop-sub {
+  font-size: 12px;
+  color: var(--muted);
+  max-width: 36ch;
+}
+
+.drop-file {
+  margin-top: 6px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.format-board {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 12px 14px 0;
+}
+
+.tag {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px solid var(--line);
+  color: var(--muted);
+}
+
+.output.wrap {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
 .output {
   flex: 1;
   min-height: 0;
