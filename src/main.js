@@ -1,12 +1,18 @@
 import "./style.css";
 import { mountJsonFormat } from "./tools/json-format.js";
 import { mountDocToMd } from "./tools/doc-to-md.js";
+import { mountUrlCodec } from "./tools/url-codec.js";
 
 const tools = [
   {
     id: "json-format",
     name: "JSON 格式化",
     mount: mountJsonFormat,
+  },
+  {
+    id: "url-codec",
+    name: "URL 编解码",
+    mount: mountUrlCodec,
   },
   {
     id: "doc-to-md",
@@ -18,6 +24,9 @@ const tools = [
 const app = document.querySelector("#app");
 
 function render(activeId) {
+  document.getElementById("md-preview")?.remove();
+  document.body.classList.remove("md-preview-open");
+
   const active = tools.find((tool) => tool.id === activeId) ?? tools[0];
 
   app.innerHTML = `

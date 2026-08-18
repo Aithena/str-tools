@@ -12,6 +12,7 @@
     "vite": "^7.1.3"
   },
   "dependencies": {
-    "@firecrawl/anydoc-wasm": "^0.1.9"
+    "@firecrawl/anydoc-wasm": "^0.1.9",
+    "marked": "^18.0.9"
   }
 }

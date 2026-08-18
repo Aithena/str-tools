@@ -3,6 +3,7 @@ import init, {
   formatFromPath,
   toMarkdownBytes,
 } from "@firecrawl/anydoc-wasm";
+import { marked } from "marked";
 
 const ACCEPT = [
   ".doc",
@@ -92,6 +93,9 @@ async function nextPaint() {
 }
 
 export function mountDocToMd(root) {
+  document.getElementById("md-preview")?.remove();
+  document.body.classList.remove("md-preview-open");
+
   root.innerHTML = `
     <section class="panel">
       <div class="panel-head">
@@ -123,6 +127,7 @@ export function mountDocToMd(root) {
       <div class="panel-head">
         <div class="panel-title">Markdown</div>
         <div class="panel-actions">
+          <button type="button" class="btn" id="btn-preview">预览</button>
           <button type="button" class="btn" id="btn-copy">复制</button>
           <button type="button" class="btn" id="btn-download">下载 .md</button>
         </div>
@@ -130,6 +135,16 @@ export function mountDocToMd(root) {
       <pre class="output placeholder wrap" id="md-output">转换后的 Markdown 会显示在这里</pre>
       <div class="status" id="md-status">等待文件</div>
     </section>
+    <div class="md-preview" id="md-preview" hidden>
+      <div class="md-preview-backdrop" data-close-preview></div>
+      <div class="md-preview-dialog" role="dialog" aria-modal="true" aria-labelledby="md-preview-title">
+        <div class="md-preview-head">
+          <div class="panel-title" id="md-preview-title">Markdown 预览</div>
+          <button type="button" class="btn" id="btn-preview-close" data-close-preview>关闭</button>
+        </div>
+        <div class="md-preview-body" id="md-preview-body"></div>
+      </div>
+    </div>
   `;
 
   const fileInput = root.querySelector("#doc-file");
@@ -231,6 +246,37 @@ export function mountDocToMd(root) {
     if (file && engineReady) convertFile(file);
   });
 
+  const preview = root.querySelector("#md-preview");
+  const previewBody = root.querySelector("#md-preview-body");
+  const previewCloseBtn = root.querySelector("#btn-preview-close");
+  document.body.appendChild(preview);
+
+  function closePreview() {
+    if (preview.hidden) return;
+    preview.hidden = true;
+    document.body.classList.remove("md-preview-open");
+    document.removeEventListener("keydown", onPreviewKeydown);
+  }
+
+  function onPreviewKeydown(event) {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      closePreview();
+    }
+  }
+
+  function openPreview() {
+    if (!lastResult) {
+      setStatus("err", "没有可预览的结果");
+      return;
+    }
+    previewBody.innerHTML = marked.parse(lastResult, { breaks: true, gfm: true });
+    preview.hidden = false;
+    document.body.classList.add("md-preview-open");
+    document.addEventListener("keydown", onPreviewKeydown);
+    previewCloseBtn.focus();
+  }
+
   convertBtn.addEventListener("click", () => {
     if (selected) runConvert(selected.name, selected.bytes);
     else fileInput.click();
@@ -246,11 +292,16 @@ export function mountDocToMd(root) {
     selected = null;
     lastResult = "";
     lastName = "document";
+    closePreview();
     dropFile.hidden = true;
     dropFile.textContent = "";
     dropTitle.textContent = engineReady ? "拖入文件，或点击选择" : "正在准备转换引擎";
     setOutput("转换后的 Markdown 会显示在这里", "placeholder");
     setStatus("", "等待文件");
+  });
+  root.querySelector("#btn-preview").addEventListener("click", openPreview);
+  preview.addEventListener("click", (event) => {
+    if (event.target.closest("[data-close-preview]")) closePreview();
   });
   root.querySelector("#btn-copy").addEventListener("click", async () => {
     if (!lastResult) {
