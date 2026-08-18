@@ -24,8 +24,8 @@ function render(activeId) {
     <div class="layout">
       <header class="topbar">
         <div class="brand">
-          <span class="brand-mark">STR TOOLS</span>
-          <span class="brand-name">文本工具箱</span>
+          <span class="brand-mark">文本工具箱</span>
+          <span class="brand-name"></span>
         </div>
         <nav class="menu">
           ${tools
